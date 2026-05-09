@@ -5,6 +5,19 @@ local lsp_utils = require "custom.utils.lsp"
 local format_utils = require "custom.utils.format"
 local blink_cmp_utils = require "custom.utils-plugins.blink-cmp"
 
+local function strip_markdown_fences(lines)
+  local stripped = {}
+  for _, line in ipairs(lines or {}) do
+    if not line:match "^```[%w_-]*%s*$" then
+      stripped[#stripped + 1] = line
+    end
+  end
+  if #stripped == 0 then
+    return lines
+  end
+  return stripped
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -60,12 +73,12 @@ return {
           severity = {
             max = vim.diagnostic.severity.WARN,
           },
-          virt_text_pos = "eol_right_align",
+          virt_text_pos = "eol",
         },
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = icons_constants.diagnostic.Error,
-            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.WARN] = icons_constants.diagnostic.Warn,
             [vim.diagnostic.severity.HINT] = "",
             [vim.diagnostic.severity.INFO] = "",
           },
@@ -77,15 +90,7 @@ return {
             return string.format("%s (%s)", diagnostic.message, diagnostic.source)
           end,
         },
-        virtual_lines = {
-          current_line = false,
-          format = function(diagnostic)
-            return string.format("%s (%s)", diagnostic.message, diagnostic.source)
-          end,
-          severity = {
-            min = vim.diagnostic.severity.ERROR,
-          },
-        },
+        virtual_lines = false,
       },
       -- NOTE: nvim-lspconfig doesn't have the option `servers`
       -- LSP Server Settings
@@ -283,6 +288,30 @@ return {
       -- slow down log file growth
       vim.lsp.set_log_level(vim.log.levels.ERROR)
 
+      vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+        if err or not (result and result.contents) then
+          return
+        end
+
+        local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+        markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
+        markdown_lines = strip_markdown_fences(markdown_lines)
+        if vim.tbl_isempty(markdown_lines) then
+          return
+        end
+
+        local hover_config = vim.tbl_deep_extend("force", {
+          border = "rounded",
+          max_width = 90,
+          focusable = true,
+          close_events = { "CursorMoved", "CursorMovedI", "InsertCharPre" },
+        }, config or {})
+
+        hover_config.winhighlight = "NormalFloat:NormalFloat,FloatBorder:LspHoverBorder"
+
+        return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", hover_config)
+      end
+
       -- setup lsp formatter
       format_utils.register(lsp_utils.formatter())
 
@@ -425,9 +454,13 @@ return {
 
       mr.refresh(function()
         for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
+          local ok, pkg = pcall(mr.get_package, tool)
+          if ok and pkg then
+            if not pkg:is_installed() then
+              pkg:install()
+            end
+          else
+            vim.notify(("Skipping unknown Mason package: %s"):format(tool), vim.log.levels.WARN)
           end
         end
       end)

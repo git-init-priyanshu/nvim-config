@@ -136,9 +136,15 @@ end
 
 M.diagnostic_goto = function(next, severity)
   return function()
+    local resolved_severity = nil
+    if type(severity) == "string" then
+      resolved_severity = vim.diagnostic.severity[severity]
+    elseif type(severity) == "table" then
+      resolved_severity = severity
+    end
     vim.diagnostic.jump {
       count = (next and 1 or -1) * vim.v.count1,
-      severity = severity and vim.diagnostic.severity[severity] or nil,
+      severity = resolved_severity,
       float = true,
     }
   end
