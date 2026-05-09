@@ -93,6 +93,7 @@ end
 M.map = function(mode, lhs, rhs, desc, opts)
   if type(desc) == "table" then
     opts = desc
+    desc = opts.desc
   end
   if not desc then
     desc = ""

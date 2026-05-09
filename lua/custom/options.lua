@@ -12,7 +12,7 @@ vim.opt.termsync = false
 -- Make line numbers default
 vim.opt.number = true
 vim.opt.numberwidth = 2
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.grepprg = "rg --vimgrep"
@@ -132,14 +132,15 @@ vim.opt.inccommand = "nosplit"
 -- NOTE: cursorcolumn causes glitches
 -- PERF: cursorcolumn causes performance issues with long lines
 vim.opt.cursorline = true
-vim.opt.cursorcolumn = not constants.transparent_background
+vim.opt.cursorcolumn = false
 
 -- Minimal number of screen lines to keep above, below, left and right before the cursor.
 vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 4
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
+vim.opt.hlsearch = false
+vim.opt.incsearch = false
 
 -- Indenting
 vim.opt.expandtab = true

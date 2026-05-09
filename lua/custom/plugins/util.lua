@@ -8,7 +8,22 @@ local smart_splits_utils = require "custom.utils-plugins.smart-splits"
 return {
   {
     "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    lazy = false,
+    init = function()
+      nvim_utils.autocmd("VimEnter", {
+        group = nvim_utils.augroup "persistence_auto_restore",
+        once = true,
+        callback = function()
+          if vim.fn.argc() > 0 then
+            return
+          end
+
+          vim.schedule(function()
+            pcall(require("persistence").load)
+          end)
+        end,
+      })
+    end,
     keys = {
       {
         "<leader>ql",
