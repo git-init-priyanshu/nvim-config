@@ -6,31 +6,31 @@ M.fold = {
 }
 
 M.folder = {
-  default = "",
-  open = "",
-  empty = "",
-  empty_open = "",
-  symlink = "",
+  default = "",
+  open = "",
+  empty = "",
+  empty_open = "",
+  symlink = "",
   symlink_open = "",
 }
 
 M.file = {
-  default = "󰈚",
+  default = "",
   symlink = "",
 }
 
 M.git = {
-  Add = "",
-  Change = "",
-  Delete = "",
-  Conflict = "",
+  Add = "+",
+  Change = "~",
+  Delete = "-",
+  Conflict = "!",
 }
 
 M.diagnostic = {
-  Error = "",
-  Warn = "",
-  Info = "",
-  Hint = "󰌶",
+  Error = "",
+  Warn = "",
+  Info = "",
+  Hint = "",
 }
 
 M.diagnostic_by_index = {
