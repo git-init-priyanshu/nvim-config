@@ -62,7 +62,7 @@ require("lazy").setup {
       height = constants.height_fullscreen,
     },
   },
-  install = { colorscheme = { "catppuccin", "habamax" } },
+  install = { colorscheme = { "monokai", "habamax" } },
   checker = { enabled = true, notify = false },
   change_detection = { enabled = false },
   performance = {

@@ -99,6 +99,6 @@ Any requirement from [Mason](https://github.com/mason-org/mason.nvim#requirement
 - Keymaps are located in `lua/custom/keymaps.lua` (global), `lua/custom/plugins/lsp/keymaps.lua` (active when an LSP server is running), and within each plugin spec.
 - If you need autoformatting on save, create an autocmd that calls `conform.nvim`.
 - Formatting, linting, and LSP config are the same as in Lazyvim, so feel free to import extras from Lazyvim, and add LSP servers in the same manner you did in Lazyvim.
-- If you use a different theme than catppuccino, replace the plugin spec in `lua/custom/plugins/colorscheme/init.lua`. Also, update the configurations for lualine, bufferline, and lazy.nvim.
+- If you use a different theme than monokai, replace the plugin spec in `lua/custom/plugins/colorscheme/init.lua`. Also, update the configurations for lualine, bufferline, and lazy.nvim.
 
 Lastly read all lua files 😅, starting from `lua/custom/init.lua`
