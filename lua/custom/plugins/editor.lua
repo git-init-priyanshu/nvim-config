@@ -12,82 +12,6 @@ local in_leetcode = require("custom.constants").in_leetcode
 
 return {
   {
-    "stevearc/oil.nvim",
-    cmd = "Oil",
-    keys = {
-      {
-        "<leader>o",
-        "<cmd>Oil<CR>",
-        desc = "Oil (Cwd)",
-      },
-      {
-        "<leader>O",
-        function()
-          require("oil").open(lazyvim_utils.root())
-        end,
-        desc = "Oil (Root)",
-      },
-    },
-    opts = {
-      columns = {
-        {
-          "permissions",
-          highlight = function(permission_str)
-            local hls = {}
-            local permission_hlgroups = {
-              ["-"] = "OilHyphen",
-              ["r"] = "OilRead",
-              ["w"] = "OilWrite",
-              ["x"] = "OilExecute",
-            }
-            for i = 1, #permission_str do
-              local char = permission_str:sub(i, i)
-              table.insert(hls, { permission_hlgroups[char], i - 1, i })
-            end
-            return hls
-          end,
-        },
-        { "size", highlight = "OilSize" },
-        { "mtime", highlight = "OilMtime" },
-        {
-          "icon",
-          default_file = icons_constants.file.default,
-          directory = icons_constants.folder.default,
-          add_padding = false,
-        },
-      },
-      win_options = {
-        signcolumn = "yes",
-        cursorcolumn = true,
-      },
-      delete_to_trash = true,
-      use_default_keymaps = false,
-      keymaps = {
-        ["g?"] = "actions.show_help",
-        ["<CR>"] = "actions.select",
-        ["<C-t>"] = "actions.select_tab",
-        ["<C-p>"] = "actions.preview",
-        ["<C-c>"] = "actions.close",
-        ["-"] = "actions.parent",
-        ["_"] = "actions.open_cwd",
-        ["`"] = "actions.cd",
-        ["~"] = "actions.tcd",
-        ["gs"] = "actions.change_sort",
-        ["g."] = "actions.toggle_hidden",
-        ["g\\"] = "actions.toggle_trash",
-
-        ["<C-v>"] = "actions.select_vsplit",
-        ["<C-x>"] = "actions.select_split",
-        ["<C-r>"] = "actions.refresh",
-        ["go"] = "actions.open_external",
-      },
-      view_options = {
-        show_hidden = true,
-      },
-    },
-  },
-
-  {
     "nvim-neo-tree/neo-tree.nvim",
     version = "3.33",
     event = "VeryLazy",
@@ -220,7 +144,20 @@ return {
                 return
               end
 
-              vim.fn.system { "trash-put", vim.fn.fnameescape(path) }
+              local ok = false
+              if vim.fn.executable "trash-put" == 1 then
+                vim.fn.system { "trash-put", path }
+                ok = vim.v.shell_error == 0
+              end
+
+              if not ok then
+                ok = vim.fn.delete(path, "rf") == 0
+              end
+
+              if not ok then
+                vim.notify("Failed to delete: " .. path, vim.log.levels.ERROR)
+              end
+
               require("neo-tree.sources.manager").refresh(state.name)
             end)
           end,
@@ -234,7 +171,19 @@ return {
               end
 
               for _, node in ipairs(selected_nodes) do
-                vim.fn.system { "trash-put", vim.fn.fnameescape(node.path) }
+                local ok = false
+                if vim.fn.executable "trash-put" == 1 then
+                  vim.fn.system { "trash-put", node.path }
+                  ok = vim.v.shell_error == 0
+                end
+
+                if not ok then
+                  ok = vim.fn.delete(node.path, "rf") == 0
+                end
+
+                if not ok then
+                  vim.notify("Failed to delete: " .. node.path, vim.log.levels.ERROR)
+                end
               end
               require("neo-tree.sources.manager").refresh(state.name)
             end)
@@ -267,8 +216,8 @@ return {
         },
       },
       window = {
-        width = 50,
-        position = "right",
+        width = 35,
+        position = "left",
         mappings = {
           ["<BS>"] = "close_node",
           ["zC"] = "close_all_nodes",
@@ -327,12 +276,12 @@ return {
           symbols = {
             added = icons_constants.git.Add,
             deleted = icons_constants.git.Delete,
-            modified = icons_constants.git.Change,
-            renamed = "󰁕",
-            untracked = "",
-            ignored = "",
-            unstaged = "󰄱",
-            staged = "",
+            modified = "",
+            renamed = "R",
+            untracked = "★",
+            ignored = "◌",
+            unstaged = "✗",
+            staged = "✓",
             conflict = "",
           },
           align = "right",
@@ -442,7 +391,7 @@ return {
         wo = {
           number = true,
           signcolumn = "yes",
-          relativenumber = true,
+          relativenumber = false,
         },
       },
       preview = {
@@ -1229,6 +1178,38 @@ return {
               },
             },
           },
+          select = {
+            layout = {
+              box = "vertical",
+              backdrop = true,
+              width = 0.62,
+              min_width = 80,
+              height = 0.5,
+              min_height = 12,
+              border = "rounded",
+              title = " {title} {live} {flags}",
+              title_pos = "center",
+              wo = {
+                winhighlight = {
+                  FloatBorder = "SnacksPickerFloatBorder",
+                },
+              },
+              {
+                win = "input",
+                height = 1,
+                border = "bottom",
+                wo = {
+                  winhighlight = {
+                    FloatBorder = "SnacksPickerFloatBorder",
+                  },
+                },
+              },
+              {
+                win = "list",
+                border = "none",
+              },
+            },
+          },
         },
         toggles = {
           hidden = " h",
@@ -1419,43 +1400,6 @@ return {
       },
     },
   },
-  {
-    "folke/snacks.nvim",
-    optional = true,
-    opts = {
-      picker = {
-        actions = {
-          flash = function(picker)
-            require("flash").jump {
-              pattern = "^",
-              label = { after = { 0, 0 } },
-              search = {
-                mode = "search",
-                exclude = {
-                  function(win)
-                    return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "snacks_picker_list"
-                  end,
-                },
-              },
-              action = function(match)
-                local idx = picker.list:row2idx(match.pos[1])
-                picker.list:_move(idx, true, true)
-              end,
-            }
-          end,
-        },
-        win = {
-          input = {
-            keys = {
-              ["<a-s>"] = { "flash", mode = { "n", "i" } },
-              ["s"] = { "flash" },
-            },
-          },
-        },
-      },
-    },
-  },
-
   {
     -- fork fixes a bug where the plugin doesn't work
     -- when the current working directory isn't the git root
@@ -1687,23 +1631,23 @@ return {
     },
     config = function(_, opts)
       -- colors
-      lazy_utils.on_load("catppuccin", function()
-        local mocha = require("catppuccin.palettes").get_palette "mocha"
+      lazy_utils.on_load("monokai", function()
+        local C = require("custom.plugins.colorscheme.palette").get_palette()
         opts.colors = {
-          mocha.rosewater,
-          mocha.flamingo,
-          mocha.pink,
-          mocha.mauve,
-          mocha.red,
-          mocha.maroon,
-          mocha.peach,
-          mocha.yellow,
-          mocha.green,
-          mocha.teal,
-          mocha.sky,
-          mocha.sapphire,
-          mocha.blue,
-          mocha.lavender,
+          C.rosewater,
+          C.flamingo,
+          C.pink,
+          C.mauve,
+          C.red,
+          C.maroon,
+          C.peach,
+          C.yellow,
+          C.green,
+          C.teal,
+          C.sky,
+          C.sapphire,
+          C.blue,
+          C.lavender,
         }
         require("blame").setup(opts)
       end)
@@ -1756,9 +1700,9 @@ return {
     },
     config = function(_, opts)
       local sniprun = require "sniprun"
-      lazy_utils.on_load("catppuccin", function()
-        local C = require("catppuccin.palettes").get_palette()
-        local U = require "catppuccin.utils.colors"
+      lazy_utils.on_load("monokai", function()
+        local C = require("custom.plugins.colorscheme.palette").get_palette()
+        local U = require "custom.utils.colors"
         opts.snipruncolors = {
           SniprunVirtualTextOk = {
             bg = U.darken(C.blue, 0.095, C.base),

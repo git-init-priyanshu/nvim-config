@@ -196,13 +196,13 @@ return {
         desc = "Treewalker Up",
       },
       {
-        "<A-h>",
+        "<A-S-h>",
         "<cmd>Treewalker Left<CR>",
         mode = { "n", "v" },
         desc = "Treewalker Left",
       },
       {
-        "<A-l>",
+        "<A-S-l>",
         "<cmd>Treewalker Right<CR>",
         mode = { "n", "v" },
         desc = "Treewalker Right",

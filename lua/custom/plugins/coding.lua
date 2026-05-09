@@ -224,6 +224,7 @@ return {
           },
         },
         menu = {
+          auto_show = true,
           winblend = vim.o.pumblend,
           min_width = 15,
           max_height = 15,
@@ -422,7 +423,7 @@ return {
           end,
           "fallback",
         },
-        ["<C-p>"] = {
+        ["<C-k>"] = {
           function(cmp)
             if not cmp.is_visible() then
               cmp.show()
@@ -431,7 +432,7 @@ return {
             cmp.select_prev()
           end,
         },
-        ["<C-n>"] = {
+        ["<C-j>"] = {
           function(cmp)
             if not cmp.is_visible() then
               cmp.show()
@@ -454,6 +455,7 @@ return {
           end,
           "select_and_accept",
         },
+        ["<CR>"] = { "select_and_accept", "fallback" },
       },
       cmdline = {
         sources = function()
@@ -495,7 +497,7 @@ return {
             end,
             "fallback",
           },
-          ["<C-p>"] = {
+          ["<C-k>"] = {
             function(cmp)
               if not cmp.is_visible() then
                 cmp.show()
@@ -504,7 +506,7 @@ return {
               cmp.select_prev()
             end,
           },
-          ["<C-n>"] = {
+          ["<C-j>"] = {
             function(cmp)
               if not cmp.is_visible() then
                 cmp.show()
@@ -520,6 +522,7 @@ return {
               vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "")
             end,
           },
+          ["<CR>"] = { "accept_and_enter", "fallback" },
           ["<Tab>"] = {
             function(cmp)
               if not cmp.is_visible() then
@@ -697,7 +700,7 @@ return {
         mode = { "i", "s" },
       },
       {
-        "<C-k>",
+        "<C-l>",
         function()
           local luasnip = require "luasnip"
           if luasnip.choice_active() then
