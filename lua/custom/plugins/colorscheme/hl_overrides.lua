@@ -1,8 +1,7 @@
 local constants = require "custom.constants"
+local U = require "custom.utils.colors"
 
 local getColors = function(C)
-  local U = require "catppuccin.utils.colors"
-
   return {
     state = {
       error = C.red,
@@ -37,7 +36,6 @@ local getColors = function(C)
 end
 
 local get_extra_hl = function(C)
-  local U = require "catppuccin.utils.colors"
   local gitColors = getColors(C).git
   local stateColors = getColors(C).state
   local floatColors = getColors(C).float
@@ -47,10 +45,11 @@ local get_extra_hl = function(C)
   local st_module_bg = C.surface0
   local st_module_fg = C.text
   local st_bg = C.base
-  local st_fg = C.surface1
+  local st_fg = C.text
   local function gen_modes_hl(mode, color)
-    result["St" .. mode .. "Mode"] = { fg = C.base, bg = C[color], bold = true }
-    result["St" .. mode .. "ModeSep"] = { fg = C[color], bg = st_bg }
+    local mode_bg = U.darken(C[color], 0.35, C.base)
+    result["St" .. mode .. "Mode"] = { fg = C.base, bg = mode_bg, bold = true }
+    result["St" .. mode .. "ModeSep"] = { fg = mode_bg, bg = st_bg }
   end
   gen_modes_hl("Normal", "blue")
   gen_modes_hl("Visual", "mauve")
@@ -63,6 +62,9 @@ local get_extra_hl = function(C)
   gen_modes_hl("Select", "mauve")
 
   return vim.tbl_deep_extend("force", result, {
+    Normal = { fg = C.text, bg = C.base },
+    NormalNC = { fg = C.text, bg = C.base },
+
     -- lang less
     lessCssAttribute = { fg = C.text, link = nil },
 
@@ -110,6 +112,10 @@ local get_extra_hl = function(C)
     StSnacksProfiler = { fg = C.red },
     StHarpoon = { fg = C.teal },
 
+    Search = { fg = C.text, bg = "NONE" },
+    IncSearch = { fg = C.text, bg = "NONE" },
+    CurSearch = { fg = C.text, bg = "NONE" },
+
     -- betterTerm.nvim
     TabLineSel = { bg = C.base, fg = C.lavender },
     TabLine = { bg = C.base, fg = C.surface1 },
@@ -139,15 +145,28 @@ local get_extra_hl = function(C)
     NvimDapVirtualTextInfo = { fg = stateColors.info, bg = U.darken(stateColors.info, 0.095, C.base) },
 
     -- snacks.nvim
+    SnacksIndent = { fg = C.surface1 },
+    SnacksIndentScope = { link = "SnacksIndent" },
     SnacksIndentChunk = { link = "SnacksIndent" },
     SnacksIndentBlank = { link = "SnacksIndent" },
     SnacksNormal = { link = "Normal" },
     SnacksNormalNC = { link = "Normal" },
     -- TODO: bug, space without HL in snacks Input
     SnacksInputTitle = { link = "FloatTitle" },
-    SnacksPickerMatch = { fg = C.blue, bg = U.darken(C.blue, 0.095, C.base) },
+    SnacksPicker = { fg = C.text, bg = C.base },
+    SnacksPickerInput = { fg = C.text, bg = C.base },
+    SnacksPickerList = { fg = C.text, bg = C.base },
+    SnacksPickerPreview = { fg = C.text, bg = C.base },
+    SnacksPickerTitle = { fg = C.lavender, bg = C.base },
+    SnacksPickerInputTitle = { fg = C.lavender, bg = C.base },
+    SnacksPickerListTitle = { fg = C.lavender, bg = C.base },
+    SnacksPickerPreviewTitle = { fg = C.lavender, bg = C.base },
+    SnacksPickerSelected = { fg = C.text, bg = U.darken(C.surface1, 0.5, C.base) },
+    SnacksPickerUnselected = { fg = C.subtext1 },
+    SnacksPickerMatch = { link = "Visual" },
+    SnacksPickerSearch = { link = "Visual" },
     SnacksTermFloatBorder = { bg = floatColors.borderBg, fg = floatColors.borderBg },
-    SnacksPickerFloatBorder = { fg = floatColors.borderBg, bg = floatColors.borderBg },
+    SnacksPickerFloatBorder = { fg = C.subtext1, bg = C.base },
 
     -- nvim-window-picker
     WindowPickerNormalFloat = { bg = floatColors.blockBg, fg = C.text },
@@ -251,17 +270,21 @@ local get_extra_hl = function(C)
     BlinkCmpLabelDeprecated = { fg = C.surface1 },
     BlinkCmpLabelDescription = { fg = C.overlay0 },
     BlinkCmpLabelDetail = { fg = C.overlay0 },
-    BlinkCmpLabelMatch = { fg = C.blue, bold = true },
+    BlinkCmpLabelMatch = { fg = C.peach, bold = true },
+    BlinkCmpMenu = { fg = C.text, bg = floatColors.bg },
+    BlinkCmpMenuSelection = { fg = C.text, bg = U.darken(C.surface1, 0.5, C.base) },
     BlinkCmpMenuBorder = { bg = floatColors.borderBg, fg = floatColors.borderFg },
+    BlinkCmpScrollBarThumb = { bg = C.surface0 },
+    BlinkCmpScrollBarGutter = { bg = floatColors.bg },
     BlinkCmpDoc = { bg = floatColors.bg },
     BlinkCmpDocBorder = { bg = floatColors.borderBg, fg = floatColors.borderFg },
-    BlinkCmpDocSeparator = { bg = floatColors.borderBg, fg = C.teal },
+    BlinkCmpDocSeparator = { bg = floatColors.borderBg, fg = C.peach },
     BlinkCmpSignatureHelp = { bg = floatColors.bg },
     BlinkCmpSignatureHelpBorder = { bg = floatColors.borderBg, fg = floatColors.borderFg },
 
     -- nvim pmenu
     -- PmenuSel = { link = "CursorLine" },
-    PmenuSel = { bg = U.darken(C.blue, 0.64, C.base) },
+    PmenuSel = { bg = U.darken(C.surface1, 0.5, C.base), fg = C.text },
     Pmenu = { bg = floatColors.bg },
     PmenuThumb = { bg = floatColors.borderFg },
     PmenuSbar = { bg = "NONE" },
@@ -269,7 +292,6 @@ local get_extra_hl = function(C)
 end
 
 local get_overrides_hl = function(C)
-  local U = require "catppuccin.utils.colors"
   local gitColors = getColors(C).git
   local stateColors = getColors(C).state
   local floatColors = getColors(C).float
@@ -278,12 +300,31 @@ local get_overrides_hl = function(C)
   return {
     -- syntax
     ["@variable"] = { link = "Variable" },
+    ["@keyword.import"] = { fg = C.sky },
+    ["@keyword.export"] = { fg = C.sky },
+    ["@function"] = { fg = C.green },
+    ["@function.definition"] = { fg = C.sky },
+    ["@function.call"] = { fg = C.green },
+    ["@function.method"] = { fg = C.green },
+    ["@function.method.call"] = { fg = C.green },
+    ["@constructor"] = { fg = C.green },
+    ["@type"] = { fg = C.green },
+    ["@property"] = { fg = C.text },
+    ["@tag.attribute"] = { fg = C.text },
+    ["@tag"] = { fg = C.green },
+    ["@tag.builtin"] = { fg = C.red },
+    ["@punctuation.bracket"] = { fg = C.yellow },
+    ["@route.key"] = { fg = C.sky },
+    ["@route.call"] = { fg = C.blue },
     Todo = { fg = C.blue, bg = C.base },
     Error = { fg = C.red, bg = "NONE" }, -- (preferred) any erroneous construct
 
     -- flash.nvim
     FlashPrompt = { link = "NoiceCmdline" },
     FlashPromptMode = { link = "NoiceCmdlineIconSearch" },
+    Search = { fg = "NONE", bg = "NONE" },
+    CurSearch = { fg = "NONE", bg = "NONE" },
+    IncSearch = { fg = "NONE", bg = "NONE" },
 
     -- trouble.nvim
     TroubleNormal = { bg = C.base },
@@ -298,6 +339,7 @@ local get_overrides_hl = function(C)
     NoiceSplit = { link = "Normal" },
     NoiceSplitBorder = { link = "FloatBorder" },
     NoiceMini = { link = "Comment" },
+    LspHoverBorder = { fg = C.subtext0, bg = floatColors.borderBg },
     NoiceVirtualText = {
       fg = U.darken(C.sky, 0.90, C.base),
       bg = U.darken(U.darken(C.sky, 0.90, C.base), 0.095, C.base),
@@ -442,9 +484,16 @@ local get_overrides_hl = function(C)
     LspReferenceWrite = { link = "LspReferenceText" },
 
     -- col
-    CursorLineNr = { bg = constants.blur_background and "NONE" or C.base },
-    LineNr = { bg = constants.blur_background and "NONE" or C.base },
+    CursorLine = { bg = U.darken(C.surface1, 0.65, C.base) },
+    CursorLineNr = { fg = C.subtext1, bg = constants.blur_background and "NONE" or C.base },
+    LineNr = { fg = C.surface2, bg = constants.blur_background and "NONE" or C.base },
+    LineNrAbove = { fg = C.surface2, bg = constants.blur_background and "NONE" or C.base },
+    LineNrBelow = { fg = C.surface2, bg = constants.blur_background and "NONE" or C.base },
     SignColumn = { bg = constants.blur_background and "NONE" or C.base },
+
+    -- selection
+    Visual = { bg = U.darken(C.surface1, 0.5, C.base) },
+    VisualNOS = { link = "Visual" },
 
     -- nvim cursor
     -- Cursor = {
@@ -463,9 +512,4 @@ local get_theme_overrides_hl = function(C)
   return vim.tbl_deep_extend("force", extra_hl, overrides_hl)
 end
 
-return {
-  latte = get_theme_overrides_hl,
-  frappe = get_theme_overrides_hl,
-  macchiato = get_theme_overrides_hl,
-  mocha = get_theme_overrides_hl,
-}
+return get_theme_overrides_hl
