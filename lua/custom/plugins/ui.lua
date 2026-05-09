@@ -190,12 +190,12 @@ return {
     },
     config = function(_, opts)
       local bufferline = require "bufferline"
-      lazy_utils.on_load("catppuccin", function()
+      lazy_utils.on_load("monokai", function()
         opts.highlights = bufferline_utils.get_highlights()
         bufferline.setup(opts)
 
         vim.api.nvim_create_autocmd("ColorScheme", {
-          pattern = "catppuccin*",
+          pattern = "monokai*",
           callback = function()
             opts.highlights = bufferline_utils.get_highlights()
             bufferline.setup(opts)
@@ -307,7 +307,7 @@ return {
       },
       lsp = {
         hover = {
-          enabled = true,
+          enabled = false,
         },
         signature = {
           -- blink.cmp has signature integration
@@ -496,11 +496,10 @@ return {
       -- indent lines
       indent = {
         indent = {
-          -- PERF: causes lag when folding a lot of lines
           enabled = true,
-          char = constants.in_kitty and "│" or "🭲",
+          char = "│",
           only_scope = false,
-          only_current = true,
+          only_current = false,
           hl = "SnacksIndent",
         },
         animate = {
@@ -508,8 +507,8 @@ return {
         },
         scope = {
           enabled = true,
-          char = constants.in_kitty and "│" or "🭲",
-          only_current = true,
+          char = "│",
+          only_current = false,
           hl = "SnacksIndentScope",
         },
         chunk = {
@@ -640,7 +639,7 @@ return {
     "nvim-mini/mini.icons",
     opts = {
       default = {
-        file = { glyph = "󰈤", hl = "MiniIconsRed" },
+        file = { glyph = "", hl = "MiniIconsRed" },
       },
       file = {
         [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
@@ -654,6 +653,11 @@ return {
         ttf = { glyph = "", hl = "MiniIconsGrey" },
         woff = { glyph = "", hl = "MiniIconsGrey" },
         woff2 = { glyph = "", hl = "MiniIconsGrey" },
+        ["d.ts"] = { glyph = "TS", hl = "MiniIconsAzure" },
+        ["spec.ts"] = { glyph = "TS", hl = "MiniIconsYellow" },
+        ["test.ts"] = { glyph = "TS", hl = "MiniIconsYellow" },
+        ["spec.js"] = { glyph = "JS", hl = "MiniIconsYellow" },
+        ["test.js"] = { glyph = "JS", hl = "MiniIconsYellow" },
       },
       filetype = {
         dotenv = { glyph = "", hl = "MiniIconsYellow" },
@@ -679,9 +683,9 @@ return {
     },
     config = function(_, opts)
       local smear_cursor = require "smear_cursor"
-      lazy_utils.on_load("catppuccin", function()
-        local mocha = require("catppuccin.palettes").get_palette "mocha"
-        opts.cursor_color = mocha.green
+      lazy_utils.on_load("monokai", function()
+        local C = require("custom.plugins.colorscheme.palette").get_palette()
+        opts.cursor_color = C.green
         smear_cursor.setup(opts)
       end)
     end,
@@ -693,8 +697,8 @@ return {
     lazy = false,
     config = function(_, opts)
       local modes = require "modes"
-      lazy_utils.on_load("catppuccin", function()
-        local C = require("catppuccin.palettes").get_palette()
+      lazy_utils.on_load("monokai", function()
+        local C = require("custom.plugins.colorscheme.palette").get_palette()
         opts.colors = {
           copy = C.yellow,
           delete = C.red,
@@ -716,9 +720,8 @@ return {
     opts = {},
     config = function(_, opts)
       local reactive = require "reactive"
-      lazy_utils.on_load("catppuccin", function()
-        local flavour = require("catppuccin").flavour
-        opts.load = { "catppuccin-" .. flavour .. "-cursor", "catppuccin-" .. flavour .. "-cursorline" }
+      lazy_utils.on_load("monokai", function()
+        opts.load = { "cursor", "cursorline" }
         reactive.setup(opts)
       end)
     end,

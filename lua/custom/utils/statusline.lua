@@ -556,29 +556,12 @@ local M = {}
 M.statusline = function()
   local modules = {
     mode_module() .. file_module(),
-    -- git_branch_module(),
     git_branch_gitsigns_module(),
-    -- git_diff_module(),
     diagnostics_module(),
-    -- symbols_module(),
     -- NOTE: the following string takes all the available space
     "%=",
-    -- search_count_module(),
-    -- harpoon_module(),
-    macro_module(),
-    snacks_profiler_module(),
-    maximize_status_module(),
-    -- PERF: disable for improved speed start
-    -- formatter_module(),
-    -- linter_module(),
     lsp_or_filetype_module(),
-    -- PERF: disable for improved speed end
-    -- copilot_module(),
-    command_module(),
-    lazy_module(),
-    words_module(),
-    indent_module(),
-    dirname_module() .. location_module(),
+    location_module(),
   }
 
   return table.concat(remove_empty_str(modules), empty_space(2))
