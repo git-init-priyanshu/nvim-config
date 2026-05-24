@@ -216,7 +216,7 @@ return {
         },
       },
       window = {
-        width = 35,
+        width = 50,
         position = "left",
         mappings = {
           ["<BS>"] = "close_node",
