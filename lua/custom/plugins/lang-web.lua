@@ -416,7 +416,7 @@ return {
         "jay-babu/mason-nvim-dap.nvim",
         optional = true,
         opts = {
-          ensure_installed = { "chrome", "js", "node2" },
+          ensure_installed = { "js" },
         },
       },
     },

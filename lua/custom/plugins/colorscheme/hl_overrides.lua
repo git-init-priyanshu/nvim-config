@@ -85,6 +85,20 @@ local get_extra_hl = function(C)
     ["@text.strong.markdown_inline"] = { fg = C.red },
     ["@text.uri.markdown_inline"] = { fg = C.blue },
 
+    -- render-markdown.nvim (subtle heading backgrounds)
+    RenderMarkdownH1 = { fg = C.red },
+    RenderMarkdownH2 = { fg = C.peach },
+    RenderMarkdownH3 = { fg = C.yellow },
+    RenderMarkdownH4 = { fg = C.green },
+    RenderMarkdownH5 = { fg = C.sapphire },
+    RenderMarkdownH6 = { fg = C.mauve },
+    RenderMarkdownH1Bg = { bg = U.darken(C.red, 0.9, C.base) },
+    RenderMarkdownH2Bg = { bg = U.darken(C.peach, 0.9, C.base) },
+    RenderMarkdownH3Bg = { bg = U.darken(C.yellow, 0.9, C.base) },
+    RenderMarkdownH4Bg = { bg = U.darken(C.green, 0.9, C.base) },
+    RenderMarkdownH5Bg = { bg = U.darken(C.sapphire, 0.9, C.base) },
+    RenderMarkdownH6Bg = { bg = U.darken(C.mauve, 0.9, C.base) },
+
     -- custom statusline
     StRelativePath = { fg = C.overlay0 },
     StModule = { bg = st_module_bg, fg = st_module_fg },
@@ -377,11 +391,11 @@ local get_overrides_hl = function(C)
     GitSignsDeletePreview = { link = "DiffDelete" },
 
     -- nvim git diff
-    DiffAdd = { bg = U.darken(gitColors.add, 0.2, C.mantle), fg = "NONE" },
-    DiffChange = { bg = U.darken(gitColors.change, 0.2, C.mantle), fg = "NONE" },
-    DiffDelete = { bg = U.darken(gitColors.delete, 0.2, C.mantle), fg = "NONE" },
+    DiffAdd = { bg = U.darken(gitColors.add, 0.82, C.mantle), fg = "NONE" },
+    DiffChange = { bg = U.darken(gitColors.change, 0.82, C.mantle), fg = "NONE" },
+    DiffDelete = { bg = U.darken(gitColors.delete, 0.82, C.mantle), fg = "NONE" },
     DiffText = {
-      bg = U.brighten(U.darken(gitColors.change, 0.2, C.mantle), 0.15),
+      bg = U.darken(gitColors.change, 0.6, C.mantle),
       fg = "NONE",
     },
 

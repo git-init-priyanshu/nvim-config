@@ -424,7 +424,9 @@ return {
     opts_extend = { "ensure_installed" },
     opts = {
       -- NOTE: mason.nvim doesn't have the option `ensure_installed`
-      ensure_installed = {},
+      ensure_installed = {
+        "tree-sitter-cli",
+      },
       ui = {
         width = constants.width_fullscreen,
         height = constants.height_fullscreen,

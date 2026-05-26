@@ -36,6 +36,28 @@ require("lazy").setup {
       priority = 1000,
       lazy = false,
       opts = {},
+      -- snacks.picker shells out to these binaries: `fd` for find-file, `rg` for grep
+      build = function()
+        local deps = { rg = "ripgrep", fd = "fd" }
+        local missing = {}
+        for bin, pkg in pairs(deps) do
+          if vim.fn.executable(bin) == 0 then
+            table.insert(missing, pkg)
+          end
+        end
+        if #missing == 0 then
+          return
+        end
+        if vim.fn.executable "brew" == 1 then
+          vim.notify("Installing picker deps: " .. table.concat(missing, ", "), vim.log.levels.INFO)
+          vim.fn.system(vim.list_extend({ "brew", "install" }, missing))
+        else
+          vim.notify(
+            "snacks.picker needs these on PATH: " .. table.concat(missing, ", "),
+            vim.log.levels.WARN
+          )
+        end
+      end,
       config = function(_, opts)
         local notify = vim.notify
         require("snacks").setup(opts)
