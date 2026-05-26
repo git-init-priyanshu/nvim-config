@@ -34,7 +34,14 @@ return {
     "Saimo/peek.nvim",
     main = "peek",
     commit = "f23200c241b06866b561150fa0389d535a4b903d",
-    build = "deno task --quiet build:fast",
+    -- NOTE: peek's bundled `build:fast` task breaks on Deno 2.x (the new
+    -- `deno bundle` needs `-o` and `--allow-import`), so bundle each entry
+    -- point explicitly instead.
+    build = table.concat({
+      "deno bundle --no-check --quiet --allow-import app/src/main.ts -o public/main.bundle.js",
+      "deno bundle --no-check --quiet --allow-import app/src/webview.ts -o public/webview.js",
+      "deno bundle --no-check --quiet --allow-import client/src/script.ts -o public/script.bundle.js",
+    }, " && "),
     init = function()
       nvim_utils.autocmd({ "BufEnter" }, {
         group = nvim_utils.augroup "load_peek_mappings",
@@ -58,7 +65,7 @@ return {
       syntax = false, -- enable syntax highlighting, affects performance
       theme = "dark", -- 'dark' or 'light'
       update_on_change = true,
-      app = { "qutebrowser", "--target", "window" }, -- 'webview', 'browser', string or a table of strings
+      app = "browser", -- 'webview', 'browser', string or a table of strings
       filetype = { "markdown" }, -- list of filetypes to recognize as markdown
 
       -- relevant if update_on_change is true
