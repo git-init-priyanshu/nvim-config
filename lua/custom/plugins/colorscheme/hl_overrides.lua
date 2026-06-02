@@ -41,25 +41,37 @@ local get_extra_hl = function(C)
   local floatColors = getColors(C).float
   local result = {}
 
-  -- custom statusline
-  local st_module_bg = C.surface0
-  local st_module_fg = C.text
-  local st_bg = C.base
-  local st_fg = C.text
+  -- custom statusline — Monokai Pro palette (matches tmux-monokai-pro)
+  local mp = {
+    white = "#fcfcfa",
+    black = "#2d2a2e",
+    dark_gray = "#403e41",
+    gray = "#727072",
+    red = "#ff6188",
+    green = "#a9dc76",
+    yellow = "#ffd866",
+    blue = "#78dce8",
+    magenta = "#fc9867",
+    cyan = "#ab9df2",
+  }
+  local st_module_bg = mp.black
+  local st_module_fg = mp.white
+  local st_bg = mp.dark_gray
+  local st_fg = mp.white
   local function gen_modes_hl(mode, color)
-    local mode_bg = U.darken(C[color], 0.35, C.base)
-    result["St" .. mode .. "Mode"] = { fg = C.base, bg = mode_bg, bold = true }
+    local mode_bg = mp[color]
+    result["St" .. mode .. "Mode"] = { fg = mp.black, bg = mode_bg, bold = true }
     result["St" .. mode .. "ModeSep"] = { fg = mode_bg, bg = st_bg }
   end
   gen_modes_hl("Normal", "blue")
-  gen_modes_hl("Visual", "mauve")
-  gen_modes_hl("Insert", "green")
-  gen_modes_hl("Terminal", "green")
+  gen_modes_hl("Visual", "cyan")
+  gen_modes_hl("Insert", "red")
+  gen_modes_hl("Terminal", "cyan")
   gen_modes_hl("Nterminal", "blue")
   gen_modes_hl("Replace", "red")
   gen_modes_hl("Confirm", "blue")
-  gen_modes_hl("Command", "peach")
-  gen_modes_hl("Select", "mauve")
+  gen_modes_hl("Command", "red")
+  gen_modes_hl("Select", "cyan")
 
   return vim.tbl_deep_extend("force", result, {
     Normal = { fg = C.text, bg = C.base },
@@ -100,31 +112,31 @@ local get_extra_hl = function(C)
     RenderMarkdownH6Bg = { bg = U.darken(C.mauve, 0.9, C.base) },
 
     -- custom statusline
-    StRelativePath = { fg = C.overlay0 },
+    StRelativePath = { fg = mp.gray, bg = st_module_bg },
     StModule = { bg = st_module_bg, fg = st_module_fg },
     StModuleAlt = { bg = st_bg, fg = st_fg },
     StModuleSep = { bg = st_bg, fg = st_module_bg },
-    StGitAdd = { fg = gitColors.add },
-    StGitChange = { fg = gitColors.change },
-    StGitDelete = { fg = gitColors.delete },
-    StGitConflict = { fg = gitColors.conflict },
-    StErrors = { fg = stateColors.error },
-    StWarnings = { fg = stateColors.warning },
-    StHints = { fg = stateColors.hint },
-    StInfos = { fg = stateColors.info },
+    StGitAdd = { fg = mp.green, bg = st_bg },
+    StGitChange = { fg = mp.magenta, bg = st_bg },
+    StGitDelete = { fg = mp.red, bg = st_bg },
+    StGitConflict = { fg = mp.red, bg = st_bg },
+    StErrors = { fg = mp.red, bg = st_bg },
+    StWarnings = { fg = mp.yellow, bg = st_bg },
+    StHints = { fg = mp.cyan, bg = st_bg },
+    StInfos = { fg = mp.blue, bg = st_bg },
     StEmptySpace = { bg = st_bg },
-    StMaximize = { fg = C.blue },
-    StLsp = { fg = C.maroon },
-    StFormatter = { fg = C.green },
-    StLinter = { fg = C.yellow },
-    StSearch = { fg = C.teal },
-    StFolder = { fg = C.blue },
-    StMacro = { fg = C.red },
-    StCommand = { fg = C.mauve },
-    StLazy = { fg = C.pink },
-    StCopilot = { fg = C.sapphire },
-    StSnacksProfiler = { fg = C.red },
-    StHarpoon = { fg = C.teal },
+    StMaximize = { fg = mp.blue, bg = st_bg },
+    StLsp = { fg = mp.blue, bg = st_bg },
+    StFormatter = { fg = mp.cyan, bg = st_bg },
+    StLinter = { fg = mp.cyan, bg = st_bg },
+    StSearch = { fg = mp.cyan, bg = st_bg },
+    StFolder = { fg = mp.blue, bg = st_module_bg },
+    StMacro = { fg = mp.red, bg = st_bg },
+    StCommand = { fg = mp.cyan, bg = st_bg },
+    StLazy = { fg = mp.cyan, bg = st_bg },
+    StCopilot = { fg = mp.blue, bg = st_bg },
+    StSnacksProfiler = { fg = mp.red, bg = st_bg },
+    StHarpoon = { fg = mp.cyan, bg = st_bg },
 
     Search = { fg = C.text, bg = "NONE" },
     IncSearch = { fg = C.text, bg = "NONE" },
@@ -472,7 +484,7 @@ local get_overrides_hl = function(C)
     VertSplit = separatorColors,
 
     -- nvim status bar
-    StatusLine = { bg = C.base },
+    StatusLine = { bg = "#403e41", fg = "#fcfcfa" },
 
     -- nvim-lsp-endhints
     LspInlayHint = {

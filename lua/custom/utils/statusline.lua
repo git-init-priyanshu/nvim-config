@@ -15,6 +15,8 @@ local separators = {
   l_b = "",
   r = "",
   r_b = "",
+  outer_l = "",
+  outer_r = "",
 }
 local modes = {
   ["n"] = { "NORMAL", "Normal" },
@@ -95,7 +97,9 @@ local function mode_module()
   local current_mode = modes[m][1]
   local mode_sep = separators.l
 
-  return hl_str("St" .. modes[m][2] .. "Mode")
+  return hl_str("St" .. modes[m][2] .. "ModeSep")
+    .. separators.outer_l
+    .. hl_str("St" .. modes[m][2] .. "Mode")
     .. " "
     .. current_mode
     .. " "
@@ -535,7 +539,16 @@ local function location_module()
   scroll = (line == 1 and "Top") or scroll
   scroll = (line == total_line and "Bot") or scroll
 
-  return mode_sep_hl .. separators.r_b .. current_mode_hl .. " " .. cursor .. " " .. scroll .. " "
+  return mode_sep_hl
+    .. separators.r_b
+    .. current_mode_hl
+    .. " "
+    .. cursor
+    .. " "
+    .. scroll
+    .. " "
+    .. mode_sep_hl
+    .. separators.outer_r
 end
 
 local M = {}
