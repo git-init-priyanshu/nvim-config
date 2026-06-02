@@ -198,22 +198,22 @@ return {
     keys = {
       -- focus windows
       {
-        "<C-Left>",
+        "<C-h>",
         "<cmd>lua require('smart-splits').move_cursor_left()<cr>",
         desc = "Focus Window Left",
       },
       {
-        "<C-Right>",
+        "<C-l>",
         "<cmd>lua require('smart-splits').move_cursor_right()<cr>",
         desc = "Focus Window Right",
       },
       {
-        "<C-Down>",
+        "<C-j>",
         "<cmd>lua require('smart-splits').move_cursor_down()<cr>",
         desc = "Focus Window Down",
       },
       {
-        "<C-Up>",
+        "<C-k>",
         "<cmd>lua require('smart-splits').move_cursor_up()<cr>",
         desc = "Focus Window Up",
       },
@@ -266,6 +266,7 @@ return {
       cursor_follows_swapped_bufs = true,
       at_edge = "stop",
       default_amount = 4,
+      multiplexer_integration = "tmux",
     },
     config = function(_, opts)
       require("smart-splits").setup(opts)

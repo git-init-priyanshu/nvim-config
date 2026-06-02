@@ -73,8 +73,7 @@ map("t", "<C-S-x>", keymaps_utils.exit_terminal_mode .. "<C-w>q", "Hide Terminal
 -- scrolling
 map({ "n", "v" }, "<C-S-d>", "zL", "Scroll Right") -- half screen
 map({ "n", "v" }, "<C-S-u>", "zH", "Scroll Left") -- half screen
-map("n", "<C-k>", "4<C-y>", "Scroll Up") -- keeping cursor position
-map("n", "<C-j>", "4<C-e>", "Scroll Down") -- keeping cursor position
+-- C-j/C-k reserved for smart-splits.nvim/tmux navigation
 
 -- debug nvim config
 map("n", "<f2>", keymaps_utils.print_syntax_info, "Inspect Cursor Syntax")
@@ -216,15 +215,7 @@ map({ "n", "v" }, "<S-k>", "5k")
 -- Paste over selection WITHOUT affecting clipboard
 map("v", "<leader>p", '"_dP')
 
--- Tmux keymaps
-map("n", "<C-h>", "<C-w>h", { desc = "window left" })
-map("n", "<C-l>", "<C-w>l", { desc = "window right" })
-map("n", "<C-j>", "<C-w>j", { desc = "window down" })
-map("n", "<C-k>", "<C-w>k", { desc = "window up" })
-map("t", "<C-h>", keymaps_utils.exit_terminal_mode .. "<C-w>h", { desc = "window left" })
-map("t", "<C-l>", keymaps_utils.exit_terminal_mode .. "<C-w>l", { desc = "window right" })
-map("t", "<C-j>", keymaps_utils.exit_terminal_mode .. "<C-w>j", { desc = "window down" })
-map("t", "<C-k>", keymaps_utils.exit_terminal_mode .. "<C-w>k", { desc = "window up" })
+-- Window/tmux navigation handled by smart-splits.nvim (see plugins/util.lua)
 
 -- With wrap mode enabled, this will treat wrapped line as different line
 -- map("n", "j", "gj")
@@ -238,12 +229,7 @@ map("n", "E", function()
   vim.diagnostic.jump { count = -vim.v.count1, float = true }
 end, { desc = "Prev Diagnostic" })
 
--- Windown resize
-map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-
-map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+-- Window resize handled by smart-splits.nvim (<C-S-A-arrow>); C-arrow is used for nvim/tmux navigation
 
 -- Integrated terminal
 -- map({ "n" }, "<A-y>", function()
