@@ -131,19 +131,6 @@ local function file_relative_path()
   local filename_path_str = vim.api.nvim_buf_get_name(0)
   local filename_relative_path_str = vim.fn.fnamemodify(filename_path_str, ":~:.")
   filename_relative_path_str = string.sub(filename_relative_path_str, 1, -2 + string.len(filename_str) * -1)
-  -- TODO: remove git root pwd from relative path str
-
-  if string.len(filename_relative_path_str) > 40 then
-    local parts = {}
-    for part in string.gmatch(filename_relative_path_str, "[^/]+") do
-      table.insert(parts, part)
-    end
-    if #parts > 2 then
-      local first_folder = parts[1]
-      local last_folder = parts[#parts]
-      filename_relative_path_str = first_folder .. "/…/" .. last_folder
-    end
-  end
 
   return hl_merge("StRelativePath", "StModule") .. filename_relative_path_str
 end
@@ -556,7 +543,6 @@ local M = {}
 M.statusline = function()
   local modules = {
     mode_module() .. file_module(),
-    git_branch_gitsigns_module(),
     diagnostics_module(),
     -- NOTE: the following string takes all the available space
     "%=",
