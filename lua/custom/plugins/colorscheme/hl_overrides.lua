@@ -377,8 +377,10 @@ local get_overrides_hl = function(C)
     WhichKeyBorder = { bg = floatColors.blockBorderBg, fg = floatColors.blockBorderFg },
 
     -- neo-tree.nvim
-    NeoTreeNormal = { bg = C.base },
-    NeoTreeNormalNC = { bg = C.base },
+    NeoTreeNormal = { bg = C.mantle },
+    NeoTreeNormalNC = { bg = C.mantle },
+    NeoTreeEndOfBuffer = { bg = C.mantle },
+    NeoTreeCursorLine = { bg = U.darken(C.surface1, 0.65, C.mantle) },
     NeoTreeDirectoryName = { fg = C.text },
     NeoTreeGitUntracked = { fg = gitColors.add },
     NeoTreeVertSplit = separatorColors,
