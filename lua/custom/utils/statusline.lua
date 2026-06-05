@@ -525,6 +525,27 @@ local function dirname_module()
     .. separators.r
 end
 
+local function visual_selection_module()
+  local m = vim.api.nvim_get_mode().mode
+  if m ~= "v" and m ~= "V" and m ~= "\22" then
+    return ""
+  end
+
+  local line_count = math.abs(vim.fn.line "." - vim.fn.line "v") + 1
+
+  if m == "\22" then
+    local col_count = math.abs(vim.fn.virtcol "." - vim.fn.virtcol "v") + 1
+    return hl_str "StModuleAlt" .. line_count .. "×" .. col_count
+  end
+
+  if m == "v" and line_count == 1 then
+    local char_count = vim.fn.wordcount().visual_chars or 0
+    return hl_str "StModuleAlt" .. char_count .. "C"
+  end
+
+  return hl_str "StModuleAlt" .. line_count .. "L"
+end
+
 local function location_module()
   local m = vim.api.nvim_get_mode().mode
   local current_mode_hl = hl_str("St" .. modes[m][2] .. "Mode")
@@ -560,6 +581,7 @@ M.statusline = function()
     -- NOTE: the following string takes all the available space
     "%=",
     lsp_or_filetype_module(),
+    visual_selection_module(),
     location_module(),
   }
 
