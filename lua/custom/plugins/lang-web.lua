@@ -1,6 +1,5 @@
 local constants = require "custom.constants"
 local lazyvim_utils = require "custom.utils.lazyvim"
-local nvim_utils = require "custom.utils.nvim"
 local format_utils = require "custom.utils.format"
 local lsp_utils = require "custom.utils.lsp"
 
@@ -79,7 +78,6 @@ return {
     optional = true,
     opts = {
       ensure_installed = {
-        "astro",
         "css",
         "graphql",
         "html",
@@ -87,7 +85,6 @@ return {
         "jsdoc",
         "json",
         "scss",
-        "svelte",
         "tsx",
         "typescript",
         "vue",
@@ -138,31 +135,7 @@ return {
             },
           },
         },
-        svelte = {},
-        astro = {},
         cssmodules_ls = {},
-        emmet_language_server = {
-          filetypes = {
-            "astro",
-            "css",
-            "eruby",
-            "html",
-            "xhtml",
-            "xml",
-            "htmldjango",
-            "javascriptreact",
-            "less",
-            "pug",
-            "sass",
-            "scss",
-            "svelte",
-            "typescriptreact",
-            "vue",
-          },
-          init_options = {
-            showSuggestionsAsSnippets = true,
-          },
-        },
         tsserver = {
           enabled = false,
         },
@@ -363,7 +336,6 @@ return {
     opts = {
       -- https://biomejs.dev/internals/language-support/
       formatters_by_ft = {
-        ["astro"] = { "biome" },
         ["css"] = { "biome", "prettierd" },
         ["graphql"] = { "biome", "prettierd" },
         ["handlebars"] = { "prettierd" },
@@ -381,7 +353,6 @@ return {
           "prettierd",
         },
         ["markdown.mdx"] = { "prettierd" },
-        ["svelte"] = { "biome", "prettierd" },
         ["scss"] = { "prettierd" },
         ["typescript"] = { "biome", "prettierd" },
         ["typescriptreact"] = { "biome", "prettierd" },
@@ -541,43 +512,6 @@ return {
         ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
       },
     },
-  },
-
-  {
-    "mattn/emmet-vim",
-    event = "VeryLazy",
-    cmd = "EmmetInstall",
-    init = function()
-      vim.g.user_emmet_install_global = 0
-      vim.g.user_emmet_leader_key = "<C-z>"
-      vim.g.user_emmet_mode = "i"
-
-      nvim_utils.autocmd("FileType", {
-        group = nvim_utils.augroup "install_emmet",
-        pattern = {
-          "astro",
-          "css",
-          "eruby",
-          "html",
-          "xhtml",
-          "xml",
-          "htmldjango",
-          "javascript",
-          "javascriptreact",
-          "less",
-          "pug",
-          "sass",
-          "scss",
-          "svelte",
-          "typescript",
-          "typescriptreact",
-          "vue",
-        },
-        callback = function()
-          vim.cmd [[ EmmetInstall ]]
-        end,
-      })
-    end,
   },
 
   {

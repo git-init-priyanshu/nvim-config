@@ -15,7 +15,6 @@
         "language": [
           "javascript",
           "javascriptreact",
-          "svelte",
           "typescript",
           "typescriptreact",
           "vue"
@@ -67,7 +66,6 @@
           "eruby",
           "javascriptreact",
           "htmldjango",
-          "astro",
           "blade"
         ],
         "path": "./html.json"
