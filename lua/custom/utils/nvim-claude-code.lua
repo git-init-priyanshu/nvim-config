@@ -39,35 +39,4 @@ function M.copy(with_range)
   vim.notify("Copied: " .. result, vim.log.levels.INFO)
 end
 
--- Send the file path to Claude Code in a vertical tmux pane ( right ).
--- Reuses an existing marked pane; otherwise splits a new one.
----@param with_range boolean
-function M.send_to_claude(with_range)
-  local result = M.get(with_range)
-  if not result then
-    return
-  end
-
-  if vim.env.TMUX == nil then
-    vim.notify("Not inside a tmux session", vim.log.levels.WARN)
-    return
-  end
-
-  local esc_cwd = vim.fn.shellescape(vim.fn.getcwd())
-  local esc_txt = vim.fn.shellescape(result)
-  local cmd = table.concat({
-    [[existing=$(tmux list-panes -F '#{pane_id} #{@claude_pane}' | awk '$2=="1"{print $1; exit}')]],
-    'if [ -n "$existing" ]; then',
-    '  tmux select-pane -t "$existing"',
-    "  tmux send-keys -t \"$existing\" -l " .. esc_txt,
-    "else",
-    "  id=$(tmux split-window -h -l 35% -c " .. esc_cwd .. " -P -F '#{pane_id}' claude)",
-    '  tmux set-option -p -t "$id" @claude_pane 1',
-    "  sleep 1.5",
-    "  tmux send-keys -t \"$id\" -l " .. esc_txt,
-    "fi",
-  }, "\n")
-  vim.fn.jobstart({ "sh", "-c", cmd }, { detach = true })
-end
-
 return M
