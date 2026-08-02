@@ -422,12 +422,12 @@ local get_overrides_hl = function(C)
     -- DiffviewVertSplit = { link = "VertSplit" },
 
     -- git-conflict.nvim
-    GitConflictCurrentLabel = { bg = U.darken(gitColors.add, 0.4, C.mantle) },
-    GitConflictCurrent = { bg = U.darken(gitColors.add, 0.2, C.mantle) },
-    GitConflictIncoming = { bg = U.darken(gitColors.info, 0.2, C.mantle) },
-    GitConflictIncomingLabel = { bg = U.darken(gitColors.info, 0.4, C.mantle) },
-    GitConflictAncestorLabel = { bg = U.darken(gitColors.ancestor, 0.4, C.mantle) },
-    GitConflictAncestor = { bg = U.darken(gitColors.ancestor, 0.2, C.mantle) },
+    GitConflictCurrentLabel = { bg = U.darken(gitColors.add, 0.72, C.mantle), fg = C.text },
+    GitConflictCurrent = { bg = U.darken(gitColors.add, 0.88, C.mantle), fg = C.text },
+    GitConflictIncoming = { bg = U.darken(gitColors.info, 0.88, C.mantle), fg = C.text },
+    GitConflictIncomingLabel = { bg = U.darken(gitColors.info, 0.72, C.mantle), fg = C.text },
+    GitConflictAncestorLabel = { bg = U.darken(gitColors.ancestor, 0.78, C.mantle), fg = C.text },
+    GitConflictAncestor = { bg = U.darken(gitColors.ancestor, 0.92, C.mantle), fg = C.text },
 
     -- avante.nvim
     AvanteConflictCurrentLabel = { link = "GitConflictCurrentLabel" },

@@ -1423,23 +1423,41 @@ return {
         next = "]c",
         prev = "[c",
       },
-      disable_diagnostics = true,
+      disable_diagnostics = false,
       list_opener = function()
         require("trouble").open { mode = "quickfix" }
       end,
     },
     config = function(_, opts)
+      local set_conflict_diagnostics = function(bufnr, enabled)
+        if vim.diagnostic.enable then
+          local ok = pcall(vim.diagnostic.enable, enabled, { bufnr = bufnr })
+          if ok then
+            return
+          end
+        end
+
+        local diagnostic_fn = enabled and vim.diagnostic.enable or vim.diagnostic.disable
+        if diagnostic_fn then
+          pcall(diagnostic_fn, bufnr)
+        end
+      end
+
       vim.api.nvim_create_autocmd("User", {
         pattern = "GitConflictDetected",
         callback = function(event)
-          lsp_utils.toggle_inlay_hints(event.buf, false)
+          local bufnr = event.buf and event.buf ~= 0 and event.buf or vim.api.nvim_get_current_buf()
+          set_conflict_diagnostics(bufnr, false)
+          lsp_utils.toggle_inlay_hints(bufnr, false)
         end,
       })
 
       vim.api.nvim_create_autocmd("User", {
         pattern = "GitConflictResolved",
         callback = function(event)
-          lsp_utils.toggle_inlay_hints(event.buf, true)
+          local bufnr = event.buf and event.buf ~= 0 and event.buf or vim.api.nvim_get_current_buf()
+          set_conflict_diagnostics(bufnr, true)
+          lsp_utils.toggle_inlay_hints(bufnr, true)
         end,
       })
 
