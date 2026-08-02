@@ -79,6 +79,7 @@ return {
       close_if_last_window = true,
       enable_diagnostics = false,
       enable_opened_markers = false,
+      git_status_async = false,
       -- enable_cursor_hijack = true,
       popup_border_style = "rounded",
       use_popups_for_input = false,
