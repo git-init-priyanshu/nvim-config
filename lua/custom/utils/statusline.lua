@@ -123,10 +123,6 @@ local function filetype_icon()
 end
 
 local function file_relative_path()
-  if vim.o.columns <= breakpoint then
-    return ""
-  end
-
   local filename_str = vim.fn.expand "%:t"
   if string.len(filename_str) == 0 then
     return ""
@@ -142,10 +138,6 @@ end
 local function filename()
   local filename_str = (fn.expand "%" == "" and "[No Name]") or fn.expand "%:t"
 
-  if #filename_str > 40 then
-    filename_str = icons_constants.other.ellipsis .. string.sub(filename_str, -20)
-  end
-
   return hl_str "StModule" .. filename_str
 end
 
@@ -157,6 +149,7 @@ local function file_module()
     .. " "
     .. filetype_icon()
     .. filename()
+    .. "%<"
     .. (#file_relative_path_str > 0 and " " .. file_relative_path_str or "")
     .. hl_str "StModule"
     .. " "
